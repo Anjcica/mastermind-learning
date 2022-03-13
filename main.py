@@ -6,7 +6,7 @@ def main():
     print("If you want play with computer, for player name put COMPUTER")  # both players can be the COMPUTER
     player1 = Player(input("Put name of first player "))
     player2 = Player(input("Put name of second player "))
-    game_num = int(input("How many games you wont to play? "))
+    game_num = int(input("How many games you want to play? "))
 
     for i in range(game_num):
         print()
