@@ -3,13 +3,14 @@ from game import Game
 
 
 def main():
+    print("If you want play with computer, for player name put COMPUTER")  # both players can be the COMPUTER
     player1 = Player(input("Put name of first player "))
     player2 = Player(input("Put name of second player "))
     game_num = int(input("How many games you wont to play? "))
 
     for i in range(game_num):
         print()
-        print(f"Now {player1.get_name()} is setting pattern and {player2.get_name()} is guessing")
+        print(f"Now {player1.get_name()} is setting pattern and {player2.get_name()} is guessing ")
         game = Game(player1, player2)
         if game.game():
             player2.set_win()

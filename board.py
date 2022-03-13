@@ -12,14 +12,17 @@ class Board:
         self.__pattern = []
         self.__board = []
 
-    def set_new_row(self, new_row):
-        if len(self.__board) <= self.__max_rows:
-            self.__board.append(new_row)
-        else:
-            raise BoardExceptions("No more space on board or row ")
-
     def set_pattern(self, new_row):
         self.__pattern = new_row
+
+    def set_new_row(self, new_row):
+        self.__board.append(new_row)
+
+    def board_full(self):
+        if len(self.__board) <= self.__max_rows:
+            return False
+        else:
+            return True
 
     def get_board(self):
         return self.__board
