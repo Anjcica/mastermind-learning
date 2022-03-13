@@ -1,5 +1,37 @@
-from const import Const as c
 import board
+from const import MastermindConst as const
+from random import choice
+import os
+
+
+def screen_clear():
+    if os.name == 'posix':
+        _ = os.system('clear')
+    else:
+        _ = os.system('cls')
+    for i in range(50):
+        print()  # for IDLE
+
+
+def set_pattern(name):  # for any player
+    print(f"{name} please chose {const.MAX_COLUMNS} colors between {const.COLOURS}")
+    num = 0
+    new_row = []
+    while num != const.MAX_COLUMNS:
+        colour = input().upper()
+        if colour in const.COLOURS:
+            new_row.append(colour)
+            num += 1
+        else:
+            print("Wrong colour, try again ")
+    return new_row
+
+
+def set_random_pattern():  # for testing or playing with computer
+    new_row = []
+    for i in range(const.MAX_COLUMNS):
+        new_row.append(choice(const.COLOURS))
+    return new_row
 
 
 class Game:
@@ -8,9 +40,10 @@ class Game:
         self.board = board.Board()
         self.codemaker = codemaker
         self.codebreaker = codebreaker
-        self.codemaker_row = self.codemaker.set_pattern()
-        self.board.set_new_row(self.codemaker_row)
-        self.full_rows = 0
+        self.__new_row = []
+        self.codemaker_row = set_pattern(self.codemaker.get_name())
+        screen_clear()
+        self.board.set_pattern(self.codemaker_row)
 
     def __guess_pattern(self, codebreaker_row):
         list_random_left_colours = []
@@ -33,19 +66,24 @@ class Game:
 
     def game(self):
         while True:
-            codebreaker_row = self.codebreaker.set_pattern()
+            codebreaker_row = set_pattern(self.codebreaker.get_name())
             self.full_rows += 1
             print(codebreaker_row)
             self.board.set_new_row(codebreaker_row)
             guessed_items, guessed_colours = self.__guess_pattern(codebreaker_row)
-            if guessed_items == c.MAX_COLUMNS:
-                print("YOU ALL GUESS CORRECT, CONGRATULATED!")
+            if guessed_items == const.MAX_COLUMNS:
+                print("\n\nYOU GUESS ALL CORRECT, CONGRATULATED!")
                 return True
-            elif self.full_rows == c.MAX_ROWS+1:  # row 0 is for code pattern
+            elif self.full_rows == const.MAX_ROWS+1:  # row 0 is for code pattern
                 print("GAME OVER, TRY AGAIN")
                 return False
             else:
                 print(f"You guess {guessed_items} places and colours + {guessed_colours} colours more")
 
-    def get_board(self):
-        self.board.print_board()
+    def print_board(self):
+        print("Pattern was :")
+        print(self.board.get_pattern())
+        print("Fill board was:")
+        played_rows = self.board.get_board()
+        for i in range(len(played_rows)):
+            print(played_rows[i])

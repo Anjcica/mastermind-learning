@@ -3,10 +3,9 @@ from game import Game
 
 
 def main():
-    player1 = Player()
-    player2 = Player()
-    print("How many games you wont to play?")
-    game_num = int(input())
+    player1 = Player(input("Put name of first player "))
+    player2 = Player(input("Put name of second player "))
+    game_num = int(input("How many games you wont to play? "))
 
     for i in range(game_num):
         print()
@@ -16,7 +15,7 @@ def main():
             player2.set_win()
         else:
             player2.set_lost()
-        game.get_board()
+        game.print_board()
         player1, player2 = player2, player1
 
     print("\nTHIS IS THE END")

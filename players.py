@@ -1,48 +1,27 @@
-from const import Const as c
-from const import MyExceptions as e
-from random import choice
+class PlayerExceptions (Exception):
+    pass
 
 
 class Player:
     max_players = 0
 
-    def __init__(self):
+    def __init__(self, name):
         Player.max_players += 1
         if Player.max_players <= 2:
-            self.name = input(f"Put {Player.max_players}. players name ").upper()
-            self.win = 0
-            self.lost = 0
-            self.__chosen_pattern = []
+            self.name = name
+            self.__win = 0
+            self.__lost = 0
         else:
-            raise e("Too much players")
-
-    def set_pattern(self):
-        print(f"{self.name} please chose {c.MAX_COLUMNS} colors between {c.COLOURS}")
-        num = 0
-        self.__chosen_pattern.clear()
-        while num != c.MAX_COLUMNS:
-            colour = input().upper()
-            if colour in c.COLOURS:
-                self.__chosen_pattern.append(colour)
-                num += 1
-            else:
-                print("Wrong colour, try again ")
-        return self.__chosen_pattern
-
-    def random_pattern(self):
-        self.__chosen_pattern.clear()
-        for i in range(c.MAX_COLUMNS):
-            self.__chosen_pattern.append(choice(c.COLOURS))
-        return self.__chosen_pattern
+            raise PlayerExceptions("Too much players")
 
     def set_win(self):
-        self.win += 1
+        self.__win += 1
 
     def set_lost(self):
-        self.lost += 1
+        self.__lost += 1
 
     def get_name(self):
         return self.name
 
     def get_result(self):
-        return [self.win, self.lost]
+        return [self.__win, self.__lost]

@@ -1,22 +1,28 @@
-from const import Const as c
-from const import MyExceptions as e
+from const import MastermindConst as const
+
+
+class BoardExceptions (Exception):
+    pass
 
 
 class Board:
     def __init__(self):
-        self.max_rows = c.MAX_ROWS
-        self.max_columns = c.MAX_COLUMNS
+        self.__max_rows = const.MAX_ROWS
+        self.__max_columns = const.MAX_COLUMNS
+        self.__pattern = []
         self.__board = []
 
     def set_new_row(self, new_row):
-        if len(self.__board) <= c.MAX_ROWS + 1 and len(new_row) == c.MAX_COLUMNS:  # row 0 is for code pattern
+        if len(self.__board) <= self.__max_rows:
             self.__board.append(new_row)
         else:
-            raise e("No more space on board or row ")
+            raise BoardExceptions("No more space on board or row ")
 
-    def print_board(self):
-        print("Pattern was :")
-        print(self.__board[0])
-        print("Fill board was:")
-        for i in range(1, len(self.__board)):
-            print(self.__board[i])
+    def set_pattern(self, new_row):
+        self.__pattern = new_row
+
+    def get_board(self):
+        return self.__board
+
+    def get_pattern(self):
+        return self.__pattern
