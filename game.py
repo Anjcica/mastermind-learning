@@ -82,7 +82,7 @@ class Game:
                 print("GAME OVER, TRY AGAIN")
                 return False
             else:
-                print(f"you hit {guessed_items} the correct positions and colors and "
+                print(f"you hit {guessed_items} correct positions and colors and "
                       f"{guessed_colours} more correct colors in the wrong position")
 
     def print_board(self):
