@@ -19,7 +19,7 @@ class Board:
         self.__board.append(new_row)
 
     def board_full(self):
-        if len(self.__board) <= self.__max_rows:
+        if len(self.__board) < self.__max_rows:
             return False
         else:
             return True
