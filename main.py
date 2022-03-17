@@ -1,27 +1,46 @@
-from players import Player
+from players import HumanPlayer, ComputerPlayer
 from game import Game
 
 
 def main():
-    print("If you want play with computer, for player name put COMPUTER")  # both players can be the COMPUTER
-    player1 = Player(input("Put name of first player "))
-    player2 = Player(input("Put name of second player "))
-    game_num = int(input("How many games you want to play? "))
+    # both, one or none players can be the COMPUTER
+    print("If you want play with computer, for player name put COMPUTER")
+    player1_name = input("Put name of first player ")
+    player2_name = input("Put name of second player ")
+
+    if player1_name.upper() == "COMPUTER":
+        codemaker = ComputerPlayer()
+    else:
+        codemaker = HumanPlayer(player1_name)
+
+    if player2_name.upper() == "COMPUTER":
+        codebreaker = ComputerPlayer()
+    else:
+        codebreaker = HumanPlayer(player2_name)
+
+    while True:
+        game_num = input("How many games you want to play? ")
+        try:
+            game_num = int(game_num)
+            break
+        except ValueError:
+            print("You must put number!")
 
     for i in range(game_num):
         print()
-        print(f"Now {player1.get_name()} is setting pattern and {player2.get_name()} is guessing ")
-        game = Game(player1, player2)
+        print(f"Now {codemaker.get_name()} is setting pattern and {codebreaker.get_name()} is guessing ")
+
+        game = Game(codemaker, codebreaker)
         if game.game():
-            player2.set_win()
+            codebreaker.set_win()
         else:
-            player2.set_lost()
+            codebreaker.set_lost()
         game.print_board()
-        player1, player2 = player2, player1
+        codemaker, codebreaker = codebreaker, codemaker
 
     print("\nTHIS IS THE END")
-    print(f"{player1.get_name()} won {player1.get_result()[0]} times")
-    print(f"{player2.get_name()} won {player2.get_result()[0]} times")
+    print(f"{codemaker.get_name()} won {codemaker.get_result()[0]} times")
+    print(f"{codebreaker.get_name()} won {codebreaker.get_result()[0]} times")
 
 
 if __name__ == '__main__':

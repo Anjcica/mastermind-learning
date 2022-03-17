@@ -1,6 +1,5 @@
 import board
 from const import MastermindConst as const
-from random import choice
 import os
 
 
@@ -20,31 +19,10 @@ class Game:
         self.codebreaker = codebreaker
 
     @staticmethod
-    def set_random_pattern():  # for simulate computer
-        new_row = []
-        for i in range(const.MAX_COLUMNS):
-            new_row.append(choice(const.COLOURS))
-        return new_row
-
-    @staticmethod
-    def set_row(name):  # for any player
-        print(f"{name} please chose {const.MAX_COLUMNS} colors between {const.COLOURS}")
-        num = 0
-        new_row = []
-        while num != const.MAX_COLUMNS:
-            colour = input().upper()
-            if colour in const.COLOURS:
-                new_row.append(colour)
-                num += 1
-            else:
-                print("Wrong colour, try again ")
-        return new_row
-
-    @staticmethod
-    def __guess_pattern(codebreaker_row, codemaker_row):
+    def guess_pattern(codebreaker_row, codemaker_row):
         list_random_left_colours = []
         list_player_left_colours = []
-        guessed_items = 0  # count same colour and position
+        guessed_items = 0  # count right colours on right position
         for item in enumerate(codemaker_row):
             if item in enumerate(codebreaker_row):
                 guessed_items += 1
@@ -61,20 +39,15 @@ class Game:
         return guessed_items, guessed_colours
 
     def game(self):
-        if self.codemaker.get_name().upper() == "COMPUTER":
-            codemaker_row = Game.set_random_pattern()
-        else:
-            codemaker_row = Game.set_row(self.codemaker.get_name())
+        codemaker_row = self.codemaker.create_row()
         screen_clear()
         self.board.set_pattern(codemaker_row)
         while True:
-            if self.codebreaker.get_name().upper() == "COMPUTER":
-                codebreaker_row = Game.set_random_pattern()
-            else:
-                codebreaker_row = Game.set_row(self.codemaker.get_name())
+            codebreaker_row = self.codebreaker.create_row()
             print(codebreaker_row)
             self.board.set_new_row(codebreaker_row)
-            guessed_items, guessed_colours = Game.__guess_pattern(codebreaker_row, codemaker_row)
+            guessed_items, guessed_colours = Game.guess_pattern(codebreaker_row, codemaker_row)
+            self.board.set_hits((guessed_items, guessed_colours))
             if guessed_items == const.MAX_COLUMNS:
                 print("\n\nYOU GUESS ALL CORRECT, CONGRATULATED!")
                 return True
@@ -90,5 +63,6 @@ class Game:
         print(self.board.get_pattern())
         print("Fill board was:")
         played_rows = self.board.get_board()
+        hits=self.board.get_hits()
         for i in range(len(played_rows)):
-            print(played_rows[i])
+            print(played_rows[i], hits[i])
