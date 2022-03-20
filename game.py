@@ -1,34 +1,30 @@
-import board
 from const import MastermindConst as const
-import os
 
 
-def screen_clear():
-    if os.name == 'posix':
-        _ = os.system('clear')
-    else:
-        _ = os.system('cls')
-    for i in range(50):
-        print()  # for IDLE
-
-
+# class ones call codemaker.create_row and many times codebreaker_create row,
+# all results are set in board by calling methods boar.set_pattern,
+# board.set_new_board and board.set_hits
 class Game:
-    def __init__(self, codemaker, codebreaker):
-        self.board = board.Board()
+    def __init__(self, codemaker, codebreaker, empty_board):
+        self.board = empty_board
         self.codemaker = codemaker
         self.codebreaker = codebreaker
+        self.codemaker_row = self.codemaker.create_row()
+        self.board.set_pattern(self.codemaker_row)
+        self.codebreaker_row = []
+        self.full_rows = 0
 
-    @staticmethod
-    def guess_pattern(codebreaker_row, codemaker_row):
+    # calculate how many colours and position codebreaker guess
+    def __guess_pattern(self):
         list_random_left_colours = []
         list_player_left_colours = []
         guessed_items = 0  # count right colours on right position
-        for item in enumerate(codemaker_row):
-            if item in enumerate(codebreaker_row):
+        for item in enumerate(self.codemaker_row):
+            if item in enumerate(self.codebreaker_row):
                 guessed_items += 1
             else:  # left lists of colours not on right position
                 list_random_left_colours.append(item[1])
-                list_player_left_colours.append(codebreaker_row[item[0]])
+                list_player_left_colours.append(self.codebreaker_row[item[0]])
 
         guessed_colours = 0  # count how many right colours , but not on right position
         for colour in list((set(list_random_left_colours))):
@@ -38,31 +34,17 @@ class Game:
 
         return guessed_items, guessed_colours
 
+    # call codebreaker.create_row until is not game over
     def game(self):
-        codemaker_row = self.codemaker.create_row()
-        screen_clear()
-        self.board.set_pattern(codemaker_row)
         while True:
-            codebreaker_row = self.codebreaker.create_row()
-            print(codebreaker_row)
-            self.board.set_new_row(codebreaker_row)
-            guessed_items, guessed_colours = Game.guess_pattern(codebreaker_row, codemaker_row)
+            self.codebreaker_row = self.codebreaker.create_row()
+            self.board.set_new_row(self.codebreaker_row)
+            self.full_rows += 1
+            guessed_items, guessed_colours = self.__guess_pattern()
             self.board.set_hits((guessed_items, guessed_colours))
             if guessed_items == const.MAX_COLUMNS:
-                print("\n\nYOU GUESS ALL CORRECT, CONGRATULATED!")
-                return True
-            elif self.board.board_full():
-                print("GAME OVER, TRY AGAIN")
-                return False
-            else:
-                print(f"you hit {guessed_items} correct positions and colors and "
-                      f"{guessed_colours} more correct colors in the wrong position")
-
-    def print_board(self):
-        print("Pattern was :")
-        print(self.board.get_pattern())
-        print("Fill board was:")
-        played_rows = self.board.get_board()
-        hits=self.board.get_hits()
-        for i in range(len(played_rows)):
-            print(played_rows[i], hits[i])
+                self.codebreaker.set_win()
+                return "Win"
+            elif self.full_rows >= const.MAX_ROWS:
+                self.codebreaker.set_lost()
+                return "Lost"

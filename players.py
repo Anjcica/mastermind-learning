@@ -18,9 +18,11 @@ class Player:
         else:
             raise PlayerExceptions("Too much players")
 
+    # class Game increases victories
     def set_win(self):
         self.__win += 1
 
+    # class Game increases losses
     def set_lost(self):
         self.__lost += 1
 
@@ -31,6 +33,7 @@ class Player:
         return [self.__win, self.__lost]
 
 
+# creating row choosing colors by random
 class ComputerPlayer(Player):
     def __init__(self):
         Player.__init__(self, name="Computer")
@@ -42,6 +45,7 @@ class ComputerPlayer(Player):
         return new_row
 
 
+# creating row that human chooses colours
 class HumanPlayer(Player):
     def __init__(self, name):
         Player.__init__(self, name)
