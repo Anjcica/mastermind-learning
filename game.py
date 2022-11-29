@@ -71,7 +71,7 @@ class Game:
             if self.codebreaker.get_name().upper() == "COMPUTER":
                 codebreaker_row = Game.set_random_pattern()
             else:
-                codebreaker_row = Game.set_row(self.codemaker.get_name())
+                codebreaker_row = Game.set_row(self.codebreaker.get_name())
             print(codebreaker_row)
             self.board.set_new_row(codebreaker_row)
             guessed_items, guessed_colours = Game.__guess_pattern(codebreaker_row, codemaker_row)
